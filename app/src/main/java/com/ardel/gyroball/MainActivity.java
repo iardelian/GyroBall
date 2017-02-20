@@ -13,15 +13,13 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.os.Vibrator;
 import android.view.Display;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
 
-public class MainActivity extends Activity implements SensorEventListener{
-
+public class MainActivity extends Activity implements SensorEventListener {
 
     CustomDrawableView mCustomDrawableView = null;
     public float xPosition, xAcceleration, xVelocity = 0.0f;
@@ -35,8 +33,7 @@ public class MainActivity extends Activity implements SensorEventListener{
     private static final float COR = 0.4f; //coefficient of restitution
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
 
@@ -59,20 +56,19 @@ public class MainActivity extends Activity implements SensorEventListener{
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
-        xmax = (float)size.x - ballWidth;
-        ymax = (float)size.y - ballHeight;
+        xmax = (float) size.x - ballWidth;
+        ymax = (float) size.y - ballHeight;
         //set start position of ball on screen center
-        xPosition = xmax/2;
-        yPosition = ymax/2;
+        xPosition = xmax / 2;
+        yPosition = ymax / 2;
     }
 
     // This method will update the UI on new sensor events
-    public void onSensorChanged(SensorEvent sensorEvent)
-    {
+    public void onSensorChanged(SensorEvent sensorEvent) {
         if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
             //Set sensor values as acceleration
             xAcceleration = -sensorEvent.values[0];
-            yAcceleration =  sensorEvent.values[1];
+            yAcceleration = sensorEvent.values[1];
             updateBall();
         }
     }
@@ -84,8 +80,8 @@ public class MainActivity extends Activity implements SensorEventListener{
         yVelocity += (yAcceleration * frameTime);
 
         //Calc distance travelled in that time
-        xPosition += (xVelocity*frameTime) + ((xVelocity/2)*(float) Math.pow(frameTime,2));
-        yPosition += (yVelocity*frameTime) + ((yVelocity/2)*(float) Math.pow(frameTime,2));
+        xPosition += (xVelocity * frameTime) + ((xVelocity / 2) * (float) Math.pow(frameTime, 2));
+        yPosition += (yVelocity * frameTime) + ((yVelocity / 2) * (float) Math.pow(frameTime, 2));
 
         //if hit edge of screen
         if (xPosition >= xmax) {
@@ -106,25 +102,19 @@ public class MainActivity extends Activity implements SensorEventListener{
         }
     }
 
-
-    public void onAccuracyChanged(Sensor arg0, int arg1)
-    {
-        // TODO Auto-generated method stub
+    public void onAccuracyChanged(Sensor arg0, int arg1) {
     }
 
 
-    public class CustomDrawableView extends View
-    {
-        public CustomDrawableView(Context context)
-        {
+    public class CustomDrawableView extends View {
+        public CustomDrawableView(Context context) {
             super(context);
             Bitmap ball = BitmapFactory.decodeResource(getResources(), R.drawable.ball);
             mBitmap = Bitmap.createScaledBitmap(ball, ballWidth, ballHeight, true);
 
         }
 
-        protected void onDraw(Canvas canvas)
-        {
+        protected void onDraw(Canvas canvas) {
             final Bitmap bitmap = mBitmap;
             canvas.drawBitmap(bitmap, xPosition, yPosition, null);
             invalidate();
@@ -133,14 +123,12 @@ public class MainActivity extends Activity implements SensorEventListener{
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
-        // TODO Auto-generated method stub
         super.onConfigurationChanged(newConfig);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
 
     @Override
-    protected void onResume()
-    {
+    protected void onResume() {
         super.onResume();
         sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
                 SensorManager.SENSOR_DELAY_GAME);
@@ -149,8 +137,7 @@ public class MainActivity extends Activity implements SensorEventListener{
 
 
     @Override
-    protected void onStop()
-    {
+    protected void onStop() {
         sensorManager.unregisterListener(this);
         super.onStop();
     }
